@@ -45,7 +45,7 @@ function prepareScript()
     addCommandLineOptionalArgument MODULE "-m|--module" "options" "Name of swagger-codegen module to use" "php-symfony" "php-symfony php"
     addCommandLineRequiredArgument TARGET_PATH "-t|--target-path" "directory" "Target directory for the generated code"
     addCommandLineRequiredArgument YAML_PATH "-i|--input" "existing_file" "Yaml file with definition of the interface"
-    addCommandLineOptionalArgument SWAGGER_JAR_FILE "--jar" "existing_file" "Path to the previously compiled swagger-codegen." "$THIS_DIR/repository/modules/swagger-codegen-cli/target/swagger-codegen-cli.jar"
+    addCommandLineOptionalArgument SWAGGER_JAR_FILE "--jar" "file" "Path to the previously compiled swagger-codegen." "$THIS_DIR/repository/modules/swagger-codegen-cli/target/swagger-codegen-cli.jar"
     
     addRequiredTool java "JAVA is required for the swagger-codegen, to execute the JAR file" "TRUE" "sudo apt-get install default-jdk"
     
