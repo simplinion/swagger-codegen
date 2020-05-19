@@ -2,7 +2,7 @@ pipelines:
     tags:
         V.*:
             - step:
-                name: Building of builder image
+                name: Building of docker image
                 trigger: automatic
                 script:
                     - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"

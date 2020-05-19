@@ -55,5 +55,5 @@ doCommandAsStep "GIT Submodules initialization" git submodule init
 doCommandAsStep "GIT Submodules update" git submodule update
 doCommandAsStep "Applying custom changes to the swagger repository" cp -r ./modules ./repository/
 cd repository
-doCommandAsStep "Building swagger-codegen" ./run-in-docker.sh mvn clean package
+doCommandAsStep "Building swagger-codegen" ./mvnw clean package
 cd $THIS_DIR
