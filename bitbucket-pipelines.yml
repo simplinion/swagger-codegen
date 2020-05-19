@@ -1,0 +1,11 @@
+pipelines:
+    tags:
+        V.*:
+            - step:
+                name: Building of builder image
+                trigger: automatic
+                script:
+                    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+                    - ./build.sh --version="${BITBUCKET_TAG/V./}"
+options:
+    docker: true
