@@ -6,6 +6,7 @@ pipelines:
                 trigger: automatic
                 script:
                     - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+                    - ./install-choco-scripts.sh
                     - ./build.sh --version="${BITBUCKET_TAG/V./}"
 options:
     docker: true

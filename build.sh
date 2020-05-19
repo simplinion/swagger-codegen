@@ -21,11 +21,8 @@ CONFIGURATION_FILE_PATH=~/$CONFIGURATION_FILE_NAME
 if [ -f "$CONFIGURATION_FILE_PATH" ]
 then 
     source $CONFIGURATION_FILE_PATH
-elif [ -f "/root/$CONFIGURATION_FILE_NAME" ]
-then 
-    source /root/$CONFIGURATION_FILE_NAME
 else 
-    printf "\033[31;1mChoco-Scripts are not installed for user $USER\033[0m\n"
+    printf "\033[31;1mChoco-Scripts are not installed for user '$USER' at '$HOME'\033[0m\n"
     exit 1
 fi
 
@@ -70,5 +67,4 @@ function buildImage()
 #   MAIN
 #
 prepareScript "$@"
-
 buildImage
