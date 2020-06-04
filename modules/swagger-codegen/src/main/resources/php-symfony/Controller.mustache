@@ -148,11 +148,30 @@ class Controller
             'previous' => $this->exceptionToArray($exception->getPrevious()),
         ];
     }
+    
+    /**
+     * Splits the output format to group and type
+     * @return array    associative array with 'group' and 'type' keys 
+     */
+    private function parseOutputFormat( string $outputFormat )
+    {
+        $elements = preg_split( "/[\/]/", $outputFormat );
+        if ( count($elements) == 2 )
+        {
+            $parsed['group'] = $elements[0];
+            $parsed['type'] = $elements[1];
+            
+            return $parsed;
+        }
+        else{
+            return null;
+        }
+    }
 
     protected function getOutputFormat($accept, array $produced)
     {
         // Figure out what the client accepts
-        $accept = preg_split("/[\s,]+/", $accept);
+        $accept = preg_split("/[\s,;]+/", $accept);
         
         if (in_array('*/*', $accept) || in_array('application/*', $accept)) {
             // Prefer JSON if the client has no preference
@@ -173,11 +192,26 @@ class Controller
         }
         
         //
-        //  Searching not standard media type
+        //  Searching non standard media type
         //
-        foreach ( $produced as $produce ) {
-            if ( in_array($produce, $accept) ){
-                return $produce;
+        foreach ( $produced as $produceItem ) {
+            if ( in_array($produceItem, $accept) || in_array('*/*', $accept) ){
+                return $produceItem;
+            }
+            else {
+                $producedItemParsed = $this->parseOutputFormat( $produceItem );
+                if ( $producedItemParsed ) {
+                    foreach ( $accept as $acceptItem ) {
+                        $acceptItemParsed = $this->parseOutputFormat($acceptItem);
+                        if ( $acceptItemParsed ) {
+                            if ( $acceptItemParsed['group'] == "*" || $acceptItemParsed['group'] == $producedItemParsed['group'] ) {
+                                if ( $acceptItemParsed['type'] == "*" || $acceptItemParsed['type'] == $producedItemParsed['type'] ) {
+                                    return $produceItem;
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
