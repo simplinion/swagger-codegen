@@ -175,18 +175,23 @@ class {{controllerName}} extends Controller
             }
             
             $content = '';
-            if ( $responseFormat == 'application/json' || $responseFormat == 'application/xml' )
-            {
-                $content = $result?$this->serialize($result, $responseFormat):'';
-            }
-            elseif ( $result && $result instanceof UploadedFile )
+            if ( $result && $result instanceof UploadedFile )
             {
                 $path = $result->getPath() . '/' . $result->getFilename();
                 if ( file_exists($path) )
                 {
                     $content = file_get_contents($path);
+                    $contentType = mime_content_type($path);
+                    $responseFormat = $this->getOutputFormat($clientAccepts, [$contentType]);
+                    if ( $responseFormat === null ) {
+                        return Response( '', 406 );
+                    }
                     $responseHeaders["Content-Length"] = filesize($path);
                 }
+            }
+            elseif ( $responseFormat == 'application/json' || $responseFormat == 'application/xml' )
+            {
+                $content = $result?$this->serialize($result, $responseFormat):'';
             }
 
             return new Response(
