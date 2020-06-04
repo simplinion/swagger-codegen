@@ -20,6 +20,7 @@
 namespace {{controllerPackage}};
 
 use \Exception;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -184,6 +185,7 @@ class {{controllerName}} extends Controller
                 if ( file_exists($path) )
                 {
                     $content = file_get_contents($path);
+                    $responseHeaders["Content-Length"] = filesize($path);
                 }
             }
 
