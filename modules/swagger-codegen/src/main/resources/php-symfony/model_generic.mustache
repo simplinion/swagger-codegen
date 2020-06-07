@@ -20,10 +20,9 @@ class {{classname}} {{#parentSchema}}extends {{{parent}}} {{/parentSchema}}
 
     /**
      * Gets {{name}}.
-     *
      * @return {{{vendorExtensions.x-commentType}}}{{^required}}|null{{/required}}
      */
-    public function {{getter}}() {{^phpLegacySupport}}: {{{vendorExtensions.x-parameterType}}}{{/phpLegacySupport}}
+    public function {{getter}}() {{^legacySupport}}: {{{vendorExtensions.x-parameterType}}}{{/legacySupport}}
     {
         return $this->{{name}};
     }

@@ -306,6 +306,7 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
                     "array"
                 )
             );
+            additionalProperties.put("legacySupport", true );
         } else {
             typeHintable = new HashSet<String>(
                 Arrays.asList(
@@ -316,6 +317,7 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
                     "string"
                 )
             );
+            additionalProperties.put("legacySupport", false );
         }
     }
 
