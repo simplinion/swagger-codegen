@@ -22,7 +22,7 @@ class {{classname}} {{#parentSchema}}extends {{{parent}}} {{/parentSchema}}
      * Gets {{name}}.
      * @return {{{vendorExtensions.x-commentType}}}{{^required}}|null{{/required}}
      */
-    public function {{getter}}() {{^legacySupport}}: {{#vendorExtensions.x-containerType}}array {{/vendorExtensions.x-containerType}}{{^vendorExtensions.x-containerType}}{{{vendorExtensions.x-parameterType}}} {{/vendorExtensions.x-containerType}}{{/legacySupport}}
+    public function {{getter}}() {{^legacySupport}}: ?{{#vendorExtensions.x-containerType}}array {{/vendorExtensions.x-containerType}}{{^vendorExtensions.x-containerType}}{{{vendorExtensions.x-parameterType}}} {{/vendorExtensions.x-containerType}}{{/legacySupport}}
     {
         return $this->{{name}};
     }
