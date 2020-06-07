@@ -141,14 +141,48 @@ class {{controllerName}} extends Controller
         try {
             ${{paramName}} = $this->deserialize(${{paramName}}, '{{#isContainer}}{{#items}}array<{{datatype}}>{{/items}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}', $inputFormat);
         } catch ( Exception $e ) {
+            {{^required}}
+            {{^defaultValue}}
+            ${{paramName}} = null;
+            {{/defaultValue}}
+            {{#isContainer}}
+            {{#defaultValue}}
+            ${{paramName}} = [{{{defaultValue}}}];
+            {{/defaultValue}}
+            {{/isContainer}}
+            {{^isContainer}}
+            {{#defaultValue}}
+            ${{paramName}} = {{{defaultValue}}};
+            {{/defaultValue}}
+            {{/isContainer}}
+            {{/required}}
+            {{#required}}
             return new Response( $e->getMessage(), 400 );
+            {{/required}}
         }
         {{/isBodyParam}}
         {{^isBodyParam}}
         try {
             ${{paramName}} = $this->deserialize(${{paramName}}, '{{#isContainer}}array<{{#collectionFormat}}{{collectionFormat}}{{/collectionFormat}}{{^collectionFormat}}csv{{/collectionFormat}},{{dataType}}>{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}', 'string');
         } catch( Exception $e ) {
+            {{^required}}
+            {{^defaultValue}}
+            ${{paramName}} = null;
+            {{/defaultValue}}
+            {{#isContainer}}
+            {{#defaultValue}}
+            ${{paramName}} = [{{{defaultValue}}}];
+            {{/defaultValue}}
+            {{/isContainer}}
+            {{^isContainer}}
+            {{#defaultValue}}
+            ${{paramName}} = {{{defaultValue}}};
+            {{/defaultValue}}
+            {{/isContainer}}
+            {{/required}}
+            {{#required}}
             return new Response( $e->getMessage(), 400 );
+            {{/required}}
         }
         {{/isBodyParam}}
         {{/isFile}}
