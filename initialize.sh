@@ -41,7 +41,9 @@ source $(getChocoScriptsPath)
 function prepareScript()
 {
     defineScript "$0" "The script is for initialization of the repository"
-        
+       
+    addCommandLineOptionalArgument USE_DOCKER "--use-docker" "bool" "If true, the script uses docker for building of the package" "FALSE"
+
     parseCommandLineArguments "$@"
 }
 
@@ -55,5 +57,10 @@ doCommandAsStep "GIT Submodules initialization" git submodule init
 doCommandAsStep "GIT Submodules update" git submodule update
 doCommandAsStep "Applying custom changes to the swagger repository" cp -r ./modules ./repository/
 cd repository
-doCommandAsStep "Building swagger-codegen" ./mvnw clean package
+if [ "$USE_DOCKER" == "TRUE" ]
+then 
+    doCommandAsStep "Building swagger-codegen" ./run-in-docker.sh mvn clean package
+else 
+    doCommandAsStep "Building swagger-codegen" ./mvnw clean package
+fi
 cd $THIS_DIR
