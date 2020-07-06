@@ -194,16 +194,24 @@ class {{controllerName}} extends Controller
         try {
             $handler = $this->getApiHandler();
 
-            {{#authMethods}}
-            // Set authentication method '{{name}}'
-            $handler->set{{name}}($security{{name}});
-            {{/authMethods}}
-            
             // Make the call to the business logic
             $responseCode = {{#returnType}}200{{/returnType}}{{^returnType}}204{{/returnType}};
+            $redirectUrl = null;
+            bool $authenticated = false;
+            {{^authMethods}}
+            $authenticated = true;
+            {{/authMethods}}
+            {{#authMethods}}
+            // Set authentication method '{{name}}'
+            $authenticated = $authenticated || $handler->set{{name}}($security{{name}}, [{{#scopes}}"{{scope}}"{{#hasMore}},{{/hasMore}}{{/scopes}}], $redirectUrl, $responseCode );
+            {{/authMethods}}
+            
             $responseHeaders = [];
-            $result = $handler->{{operationId}}({{#allParams}}${{paramName}}, {{/allParams}}$responseCode, $responseHeaders);
-
+            if ( authenticated ) {
+                $result = $handler->{{operationId}}({{#allParams}}${{paramName}}, {{/allParams}}$responseCode, $responseHeaders);
+            } else if ( $redirectUrl ) {
+                $responseHeaders['Location'] = $redirectUrl;
+            }
             // Find default response message
             $message = '{{#responses}}{{#isDefault}}{{message}}{{/isDefault}}{{/responses}}';
 

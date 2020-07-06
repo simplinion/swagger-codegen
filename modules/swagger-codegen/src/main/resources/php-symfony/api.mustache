@@ -45,14 +45,46 @@ interface {{classname}}
     
     {{#authMethods}}
 
+    {{#scopes}}
+    /**
+     * The scope: {{scope}}
+     * {{description}}
+     */
+    const SCOPE_{{name}}_{{scope}} = "{{scope}}";
+    {{/scopes}}
+    
+    /**
+     * Stores possible scopes for the {{name}} authentication methods
+     */
+    const SCOPES_{{name}} = [
+        {{#scopes}}
+        self::SCOPE_{{name}}_{{scope}},
+        {{/scopes}}
+    ];
+    {{#isOAuth}}
+    /**
+     *  URL for the authorization
+     */
+    const AUTHORIZATION_URL_{{name}} = "{{authorizationUrl}}";
+    
+    /**
+     * URL for getting a token 
+     */
+    const TOKEN_URL_{{name}} = "{{tokenUrl}}";
+    {{/isOAuth}}
+    
     /**
      * Sets authentication method {{name}}
      *
      * @param string $value Value of the {{name}} authentication method.
+     * @param string[] $scopes      Array with scopes allowed in the method
+     * @param string $redirectUrl   URL to be redirected to
+     * @param int $responseCode     Reference to the response code
      *
-     * @return void
+     * @return bool     true if the authentication succeed
      */
-    public function set{{name}}($value);
+    public function set{{name}}(?string $value, array $scopes, ?string &$redirectUrl, int& $responseCode ) : bool;
+    
     {{/authMethods}}
     {{#operation}}
 
