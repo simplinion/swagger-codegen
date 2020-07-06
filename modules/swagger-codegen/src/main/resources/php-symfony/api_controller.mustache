@@ -207,7 +207,7 @@ class {{controllerName}} extends Controller
             {{/authMethods}}
             
             $responseHeaders = [];
-            if ( authenticated ) {
+            if ( $authenticated ) {
                 $result = $handler->{{operationId}}({{#allParams}}${{paramName}}, {{/allParams}}$responseCode, $responseHeaders);
             } else if ( $redirectUrl ) {
                 $responseHeaders['Location'] = $redirectUrl;
