@@ -378,7 +378,20 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
 
             // Add operation's authentication methods to whole interface
             if (op.authMethods != null) {
-                authMethods.addAll(op.authMethods);
+                for ( CodegenSecurity authMethod : op.authMethods ) {
+                    boolean found = false;
+                    
+                    for ( CodegenSecurity x : authMethods ) {
+                        if ( x.equals( authMethod ) ) {
+                            found = true;
+                            break;
+                        }
+                    }
+                        
+                    if ( ! found ) {
+                        authMethods.add(authMethod);
+                    }
+                }
             }
         }
 
