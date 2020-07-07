@@ -203,7 +203,7 @@ class {{controllerName}} extends Controller
             {{/authMethods}}
             {{#authMethods}}
             // Set authentication method '{{name}}'
-            $authenticated = $authenticated || $handler->set{{name}}($security{{name}}, [{{#scopes}}self::SCOPE_{{name}}_{{scope}}{{#hasMore}},{{/hasMore}}{{/scopes}}], $redirectUrl, $responseCode );
+            $authenticated = $authenticated || $handler->set{{name}}($security{{name}}, [{{#scopes}}{{classname}}::SCOPE_{{name}}_{{scope}}{{#hasMore}},{{/hasMore}}{{/scopes}}], $redirectUrl, $responseCode );
             {{/authMethods}}
             
             $responseHeaders = [];
