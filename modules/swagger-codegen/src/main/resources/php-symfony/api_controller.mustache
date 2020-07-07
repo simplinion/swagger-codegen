@@ -197,6 +197,7 @@ class {{controllerName}} extends Controller
             // Make the call to the business logic
             $responseCode = {{#returnType}}200{{/returnType}}{{^returnType}}204{{/returnType}};
             $redirectUrl = null;
+            $result = null;
             $authenticated = false;
             {{^authMethods}}
             $authenticated = true;
