@@ -398,6 +398,11 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
                                         }
                                     }
                                     if ( !scopeFound ) {
+                                        if ( scopes.size() > 0 ) {
+                                            System.out.println( "scopes.get(scopes.size() - 1): " + scopes.get(scopes.size() - 1) );
+                                            //scopes.get(scopes.size() - 1).hasMore = true;
+                                        }
+                                        //authMethodScope.hasMore = false;
                                         scopes.add( authMethodScope );
                                     }
                                 }
@@ -413,7 +418,19 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
                 }
             }
         }
-
+        
+        for ( CodegenSecurity authMethod : authMethods ) {
+            if ( authMethod.scopes != null ) {
+                for ( Map<String, Object> scope : authMethod.scopes ) {
+                    scope.put( "hasMore", true );
+                }
+                if ( authMethod.scopes.size() > 0 ) {
+                    authMethod.scopes.get( authMethod.scopes.size() - 1 ).put( "hasMore", false );
+                }
+            }
+            System.out.println( "scopes: " + authMethod.scopes );
+        }
+        
         operations.put("authMethods", authMethods);
 
         return objs;
