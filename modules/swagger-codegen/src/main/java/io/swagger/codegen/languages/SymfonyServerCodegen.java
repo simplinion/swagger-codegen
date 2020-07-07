@@ -386,15 +386,51 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
                             found = true;
                             break;
                         }
-                    }
-                        
+                        else if ( x.name.equals( authMethod.name ) ) {
+                            if ( x.scopes != null && authMethod.scopes != null ) {
+                                List<Map<String, Object>> scopes = x.scopes;
+                                for ( Map<String,Object> authMethodScope : authMethod.scopes ) {
+                                    boolean scopeFound = false;
+                                    for ( Map<String,Object> xScope : x.scopes ) {
+                                        if ( xScope.equals( authMethodScope ) ){   
+                                            scopeFound = true;
+                                            break;
+                                        }
+                                    }
+                                    if ( !scopeFound ) {
+                                        if ( scopes.size() > 0 ) {
+                                            System.out.println( "scopes.get(scopes.size() - 1): " + scopes.get(scopes.size() - 1) );
+                                            //scopes.get(scopes.size() - 1).hasMore = true;
+                                        }
+                                        //authMethodScope.hasMore = false;
+                                        scopes.add( authMethodScope );
+                                    }
+                                }
+                                x.scopes = scopes;
+                            }
+                            found = true;
+                            break;
+                        }
+                    }       
                     if ( ! found ) {
                         authMethods.add(authMethod);
                     }
                 }
             }
         }
-
+        
+        for ( CodegenSecurity authMethod : authMethods ) {
+            if ( authMethod.scopes != null ) {
+                for ( Map<String, Object> scope : authMethod.scopes ) {
+                    scope.put( "hasMore", true );
+                }
+                if ( authMethod.scopes.size() > 0 ) {
+                    authMethod.scopes.get( authMethod.scopes.size() - 1 ).put( "hasMore", false );
+                }
+            }
+            System.out.println( "scopes: " + authMethod.scopes );
+        }
+        
         operations.put("authMethods", authMethods);
 
         return objs;
