@@ -195,7 +195,8 @@ class {{controllerName}} extends Controller
             $handler = $this->getApiHandler();
 
             // Make the call to the business logic
-            $responseCode = {{#returnType}}200{{/returnType}}{{^returnType}}204{{/returnType}};
+            $defaultResponseCode = {{#returnType}}200{{/returnType}}{{^returnType}}204{{/returnType}};
+            $responseCode = $defaultResponseCode;
             $redirectUrl = null;
             $result = null;
             $authenticated = false;
@@ -210,8 +211,13 @@ class {{controllerName}} extends Controller
             $responseHeaders = [];
             if ( $authenticated ) {
                 $result = $handler->{{operationId}}({{#allParams}}${{paramName}}, {{/allParams}}$responseCode, $responseHeaders);
-            } else if ( $redirectUrl ) {
-                $responseHeaders['Location'] = $redirectUrl;
+            } else {
+                if ( $redirectUrl ) {
+                    $responseHeaders['Location'] = $redirectUrl;
+                }
+                if ( $responseCode == $defaultResponseCode ) {
+                    $responseCode = 401;
+                }
             }
             // Find default response message
             $message = '{{#responses}}{{#isDefault}}{{message}}{{/isDefault}}{{/responses}}';
