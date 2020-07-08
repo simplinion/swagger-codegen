@@ -38,6 +38,8 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
     protected Boolean phpLegacySupport = Boolean.TRUE;
 
     protected HashSet<String> typeHintable;
+    
+    protected HashMap<String, String> formatMapping;
 
     static {
         SYMFONY_EXCEPTIONS = new HashMap<>();
@@ -148,6 +150,15 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
         typeMapping.put("ByteArray", "string");
         typeMapping.put("UUID", "string");
 
+        formatMapping = new HashMap<String, String>();
+        formatMapping.put("email", "Email");
+        formatMapping.put("url", "Url");
+        formatMapping.put("hostname", "Hostname");
+        formatMapping.put("ip", "Ip");
+        formatMapping.put("json", "Json");
+        formatMapping.put("uuid", "Uuid");
+        formatMapping.put("password", "UserPassword");
+        
         cliOptions.add(new CliOption(COMPOSER_VENDOR_NAME, "The vendor name used in the composer package name. The template uses {{composerVendorName}}/{{composerProjectName}} for the composer package name. e.g. yaypets. IMPORTANT NOTE (2016/03): composerVendorName will be deprecated and replaced by gitUserId in the next swagger-codegen release"));
         cliOptions.add(new CliOption(BUNDLE_NAME, "The name of the Symfony bundle. The template uses {{bundleName}}"));
         cliOptions.add(new CliOption(COMPOSER_PROJECT_NAME, "The project name used in the composer package name. The template uses {{composerVendorName}}/{{composerProjectName}} for the composer package name. e.g. petstore-client. IMPORTANT NOTE (2016/03): composerProjectName will be deprecated and replaced by gitRepoId in the next swagger-codegen release"));
@@ -336,6 +347,11 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
             // Loop through all input parameters to determine, whether we have to import something to
             // make the input type available.
             for (CodegenParameter param : op.allParams) {
+                System.out.println("Found param " + param + " with dataFormat: " + param.dataFormat );
+                if ( param.dataFormat != null && formatMapping.containsKey( param.dataFormat ) )
+                {
+                    param.vendorExtensions.put("ValidatorFormat", formatMapping.get( param.dataFormat ) );
+                }
                 // Determine if the parameter type is supported as a type hint and make it available
                 // to the templating engine
                 String typeHint = getTypeHint(param.dataType);
@@ -458,6 +474,12 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
         // Simplify model var type
         for (CodegenProperty var : model.vars) {
             if (var.datatype != null) {
+                System.out.println( "Found property: " + var.dataFormat );
+                
+                if ( var.dataFormat != null && formatMapping.containsKey( var.dataFormat ) )
+                {
+                    var.vendorExtensions.put("ValidatorFormat", formatMapping.get( var.dataFormat ) );
+                }
                 // Determine if the parameter type is supported as a type hint and make it available
                 // to the templating engine
                 String typeHint = getTypeHint(var.datatype);
