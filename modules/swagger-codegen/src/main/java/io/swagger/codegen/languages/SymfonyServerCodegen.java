@@ -382,34 +382,45 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
                     boolean found = false;
                     
                     for ( CodegenSecurity x : authMethods ) {
+                        System.out.println("x.name = " + x.name + " authMethod.name: " + authMethod.name );
                         if ( x.equals( authMethod ) ) {
+                            System.out.println( "methods are equal" );
                             found = true;
                             break;
                         }
                         else if ( x.name.equals( authMethod.name ) ) {
+                            System.out.println( "methods have the same name" );
                             if ( x.scopes != null && authMethod.scopes != null ) {
+                                System.out.println( "scopes are not null" );
                                 List<Map<String, Object>> scopes = x.scopes;
                                 for ( Map<String,Object> authMethodScope : authMethod.scopes ) {
+                                    System.out.println( "authMethodScope: " + authMethodScope );
                                     boolean scopeFound = false;
                                     for ( Map<String,Object> xScope : x.scopes ) {
-                                        if ( xScope.equals( authMethodScope ) ){   
+                                        System.out.println( "xScope: " + xScope );
+                                        if ( xScope.get( "scope" ).equals( authMethodScope.get( "scope") ) ){  
+                                            System.out.println( "scopes are the same" );
                                             scopeFound = true;
                                             break;
                                         }
+                                        else {
+                                            System.out.println( "scopes are NOT the same" );
+                                        }
                                     }
                                     if ( !scopeFound ) {
-                                        if ( scopes.size() > 0 ) {
-                                            System.out.println( "scopes.get(scopes.size() - 1): " + scopes.get(scopes.size() - 1) );
-                                            //scopes.get(scopes.size() - 1).hasMore = true;
-                                        }
-                                        //authMethodScope.hasMore = false;
                                         scopes.add( authMethodScope );
                                     }
                                 }
                                 x.scopes = scopes;
                             }
+                            else {
+                                System.out.println("one of the scopes is null");
+                            }
                             found = true;
                             break;
+                        }
+                        else {
+                            System.out.println( "methods are NOT the same" );
                         }
                     }       
                     if ( ! found ) {
