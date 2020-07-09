@@ -352,6 +352,16 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
                 {
                     param.vendorExtensions.put("ValidatorFormat", formatMapping.get( param.dataFormat ) );
                 }
+                if ( param.dataFormat != null && param.dataFormat.equals( "base64" ) )
+                {
+                    param.vendorExtensions.put("isBase64", true );
+                    System.out.println( "It is base64: " + param.dataFormat );
+                }
+                else
+                {
+                    param.vendorExtensions.put("isBase64", false );
+                    System.out.println( "It is NOT base64: " + param.dataFormat );
+                }
                 // Determine if the parameter type is supported as a type hint and make it available
                 // to the templating engine
                 String typeHint = getTypeHint(param.dataType);

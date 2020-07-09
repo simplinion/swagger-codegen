@@ -49,6 +49,10 @@
     {{#vendorExtensions.ValidatorFormat}}
      * @Assert\{{vendorExtensions.ValidatorFormat}}()
     {{/vendorExtensions.ValidatorFormat}}
+    {{#vendorExtensions.isBase64}}
+     * Verification of base64 format
+     * @Assert\Regex("/^[a-zA-Z0-9\\+ /\\=]+$/")
+    {{/vendorExtensions.isBase64}}
 {{#hasValidation}}
     {{#maxLength}}
      * @Assert\Length(
