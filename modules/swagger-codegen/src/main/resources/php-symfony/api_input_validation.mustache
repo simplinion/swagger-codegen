@@ -45,7 +45,7 @@
     {{/vendorExtensions.ValidatorFormat}}
     {{#vendorExtensions.isBase64}}
         // Verification of the base64 format
-        $asserts[] = new Assert\Regex("/^[a-zA-Z0-9\\+ /\\=]+$/");
+        $asserts[] = new Assert\Regex('/^[a-zA-Z0-9+ \/\=]+$/');
     {{/vendorExtensions.isBase64}}
 {{#hasValidation}}
     {{#maxLength}}
