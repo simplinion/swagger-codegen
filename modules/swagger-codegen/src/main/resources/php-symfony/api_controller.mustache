@@ -200,12 +200,19 @@ class {{controllerName}} extends Controller
             $redirectUrl = null;
             $result = null;
             $authenticated = false;
+            
+            $handler->clearAuthenticationMethodRequirements();
+            
+            {{#authMethods}}
+            $handler->setAuthenticationMethodRequired( "{{name}}", [{{#scopes}}{{classname}}::SCOPE_{{name}}_{{scope}}{{#hasMore}},{{/hasMore}}{{/scopes}}] );
+            {{/authMethods}}
+            
             {{^authMethods}}
             $authenticated = true;
             {{/authMethods}}
             {{#authMethods}}
             // Set authentication method '{{name}}'
-            $authenticated = $authenticated || $handler->set{{name}}($security{{name}}, [{{#scopes}}{{classname}}::SCOPE_{{name}}_{{scope}}{{#hasMore}},{{/hasMore}}{{/scopes}}], $redirectUrl, $responseCode );
+            $authenticated = $handler->set{{name}}($security{{name}}, [{{#scopes}}{{classname}}::SCOPE_{{name}}_{{scope}}{{#hasMore}},{{/hasMore}}{{/scopes}}], $redirectUrl, $responseCode ) || $authenticated;
             {{/authMethods}}
             
             $responseHeaders = [];
