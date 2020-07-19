@@ -77,6 +77,9 @@ class {{controllerName}} extends Controller
         }
 
         // Handle authentication
+        $matches = [];
+        $authenticationHeader = $request->headers->get('authorization');
+
         {{#authMethods}}
         // Authentication '{{name}}' required
         {{#isApiKey}}
@@ -92,10 +95,19 @@ class {{controllerName}} extends Controller
         {{#isBasic}}
         // HTTP basic authentication required
         $security{{name}} = $request->headers->get('authorization');
+        if ( preg_match('/{{name}}\s([^ ]+)/', $authenticationHeader, $matches) || preg_match('/Basic\s([^ ]+)/', $authenticationHeader, $matches) )
+        {
+            $security{{name}} = $matches[1];
+        }
         {{/isBasic}}
         {{#isOAuth}}
         // Oauth required
         $security{{name}} = $request->headers->get('authorization');
+        if ( preg_match('/{{name}}\s([^ ]+)/', $authenticationHeader, $matches) || preg_match('/Bearer\s([^ ]+)/', $authenticationHeader, $matches) )
+        {
+            $security{{name}} = $matches[1];
+        }
+
         {{/isOAuth}}
         {{/authMethods}}
 
