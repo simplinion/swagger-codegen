@@ -287,6 +287,8 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
         supportingFiles.add(new SupportingFile("ApiPass.mustache", dependencyInjectionDir + File.separator + "Compiler", bundleName + "ApiPass.php"));
         supportingFiles.add(new SupportingFile("ApiServer.mustache", toPackagePath(apiPackage, srcBasePath), "ApiServer.php"));
 
+        supportingFiles.add(new SupportingFile("api_common_base.mustache", toPackagePath(apiPackage, srcBasePath), "ApiInterfaceCommonBase.php"));
+
         // Serialization components
         supportingFiles.add(new SupportingFile("serialization/SerializerInterface.mustache", toPackagePath(servicePackage, srcBasePath), "SerializerInterface.php"));
         supportingFiles.add(new SupportingFile("serialization/JmsSerializer.mustache", toPackagePath(servicePackage, srcBasePath), "JmsSerializer.php"));
