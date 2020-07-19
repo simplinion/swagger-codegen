@@ -78,6 +78,7 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
         modelDocPath = docsBasePath + File.separator + modelDirName;
         outputFolder = "generated-code" + File.separator + "php";
         apiTemplateFiles.put("api_controller.mustache", ".php");
+        apiTemplateFiles.put("api_base.mustache", ".php");
         modelTestTemplateFiles.put("testing/model_test.mustache", ".php");
         apiTestTemplateFiles = new HashMap<String, String>();
         apiTestTemplateFiles.put("testing/api_test.mustache", ".php");
@@ -215,6 +216,8 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
         String suffix = apiTemplateFiles().get(templateName);
         if (templateName.equals("api_controller.mustache"))
             return controllerFileFolder() + '/' + toControllerName(tag) + suffix;
+        if (templateName.equals("api_base.mustache"))
+            return apiFileFolder() + '/' + toApiFilename(tag) + "Base" + suffix;
 
         return apiFileFolder() + '/' + toApiFilename(tag) + suffix;
     }
