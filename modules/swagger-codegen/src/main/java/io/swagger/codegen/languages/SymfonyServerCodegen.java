@@ -341,18 +341,29 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
     public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
         objs = super.postProcessOperations(objs);
 
+        System.out.println( "postProcessOperations: " + objs );
+        
         Map<String, Object> operations = (Map<String, Object>) objs.get("operations");
         operations.put("controllerName", toControllerName((String) operations.get("pathPrefix")));
         operations.put("symfonyService", toSymfonyService((String) operations.get("pathPrefix")));
 
-        HashSet<CodegenSecurity> authMethods = new HashSet<>();
+        HashSet<CodegenSecurity> allAuthMethods = new HashSet<>();
         List<CodegenOperation> operationList = (List<CodegenOperation>) operations.get("operation");
+        
+        for (CodegenOperation op : operationList) {
+            if (op.authMethods != null) {
+                for ( CodegenSecurity authMethod : op.authMethods ) {
+                    System.out.println( "BEGIN authMethod.scopes: " + authMethod.scopes + " for authMethod: " + authMethod );
+                }
+            }
+        }
+        
+        System.out.println( "  operationList: " + operationList );
 
         for (CodegenOperation op : operationList) {
             // Loop through all input parameters to determine, whether we have to import something to
             // make the input type available.
             for (CodegenParameter param : op.allParams) {
-                System.out.println("Found param " + param + " with dataFormat: " + param.dataFormat );
                 if ( param.dataFormat != null && formatMapping.containsKey( param.dataFormat ) )
                 {
                     param.vendorExtensions.put("ValidatorFormat", formatMapping.get( param.dataFormat ) );
@@ -360,12 +371,10 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
                 if ( param.dataFormat != null && param.dataFormat.equals( "base64" ) )
                 {
                     param.vendorExtensions.put("isBase64", true );
-                    System.out.println( "It is base64: " + param.dataFormat );
                 }
                 else
                 {
                     param.vendorExtensions.put("isBase64", false );
-                    System.out.println( "It is NOT base64: " + param.dataFormat );
                 }
                 // Determine if the parameter type is supported as a type hint and make it available
                 // to the templating engine
@@ -411,57 +420,45 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
             if (op.authMethods != null) {
                 for ( CodegenSecurity authMethod : op.authMethods ) {
                     boolean found = false;
-                    
-                    for ( CodegenSecurity x : authMethods ) {
-                        System.out.println("x.name = " + x.name + " authMethod.name: " + authMethod.name );
+                    for ( CodegenSecurity x : allAuthMethods ) {
                         if ( x.equals( authMethod ) ) {
-                            System.out.println( "methods are equal" );
                             found = true;
                             break;
                         }
                         else if ( x.name.equals( authMethod.name ) ) {
-                            System.out.println( "methods have the same name" );
                             if ( x.scopes != null && authMethod.scopes != null ) {
-                                System.out.println( "scopes are not null" );
-                                List<Map<String, Object>> scopes = x.scopes;
+                                List<Map<String, Object>> scopes = new ArrayList<Map<String, Object>>();
                                 for ( Map<String,Object> authMethodScope : authMethod.scopes ) {
-                                    System.out.println( "authMethodScope: " + authMethodScope );
                                     boolean scopeFound = false;
                                     for ( Map<String,Object> xScope : x.scopes ) {
-                                        System.out.println( "xScope: " + xScope );
                                         if ( xScope.get( "scope" ).equals( authMethodScope.get( "scope") ) ){  
-                                            System.out.println( "scopes are the same" );
                                             scopeFound = true;
                                             break;
                                         }
-                                        else {
-                                            System.out.println( "scopes are NOT the same" );
-                                        }
                                     }
                                     if ( !scopeFound ) {
-                                        scopes.add( authMethodScope );
+                                        System.out.println( "SCOPE NOT FOUND!!!!!! - scope " + authMethodScope + " was not found, adding" );
+                                        x.scopes.add( authMethodScope );
                                     }
                                 }
-                                x.scopes = scopes;
-                            }
-                            else {
-                                System.out.println("one of the scopes is null");
                             }
                             found = true;
                             break;
                         }
                         else {
-                            System.out.println( "methods are NOT the same" );
+                            System.out.println("");
                         }
-                    }       
-                    if ( ! found ) {
-                        authMethods.add(authMethod);
                     }
+                    if ( ! found && authMethod != null ) {
+                        CodegenSecurity security = authMethod.clone();
+                        allAuthMethods.add(security);
+                    }
+                    System.out.println( "MIDDLE authMethod.scopes: " + authMethod.scopes + " for authMethod: " + authMethod  );
                 }
             }
         }
         
-        for ( CodegenSecurity authMethod : authMethods ) {
+        for ( CodegenSecurity authMethod : allAuthMethods ) {
             if ( authMethod.scopes != null ) {
                 for ( Map<String, Object> scope : authMethod.scopes ) {
                     scope.put( "hasMore", true );
@@ -470,11 +467,16 @@ public class SymfonyServerCodegen extends AbstractPhpCodegen implements CodegenC
                     authMethod.scopes.get( authMethod.scopes.size() - 1 ).put( "hasMore", false );
                 }
             }
-            System.out.println( "scopes: " + authMethod.scopes );
         }
+        for (CodegenOperation op : operationList) {
+            if (op.authMethods != null) {
+                for ( CodegenSecurity authMethod : op.authMethods ) {
+                    System.out.println( "END authMethod.scopes: " + authMethod.scopes + " for authMethod: " + authMethod  );
+                }
+            }
+        }
+        operations.put("allAuthMethods", allAuthMethods);
         
-        operations.put("authMethods", authMethods);
-
         return objs;
     }
 

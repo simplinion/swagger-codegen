@@ -2,6 +2,8 @@ package io.swagger.codegen;
 
 import java.util.List;
 import java.util.Map;
+import java.io.*; 
+import java.util.*;
 
 public class CodegenSecurity {
     public String name;
@@ -21,6 +23,40 @@ public class CodegenSecurity {
         return String.format("%s(%s)", name, type);
     }
 
+    public CodegenSecurity clone() 
+    { 
+        CodegenSecurity security = new CodegenSecurity();
+        
+        security.name = name;
+        security.type = type;
+        security.hasMore = hasMore;
+        security.isBasic = isBasic;
+        security.isOAuth = isOAuth;
+        security.isApiKey = isApiKey;
+        security.vendorExtensions = vendorExtensions;
+        security.keyParamName = keyParamName;
+        security.isKeyInQuery = isKeyInQuery;
+        security.isKeyInHeader = isKeyInHeader;
+        security.flow = flow;
+        security.authorizationUrl = authorizationUrl;
+        security.tokenUrl = tokenUrl;
+        security.isCode = isCode;
+        security.isPassword = isPassword;
+        security.isApplication = isApplication;
+        security.isImplicit = isImplicit;
+    
+        if ( scopes != null )
+        {
+            security.scopes = new ArrayList();
+            for ( Map<String,Object> scope : scopes ) 
+            {
+                security.scopes.add( scope );
+            }
+        }
+        
+        return security;
+    } 
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
