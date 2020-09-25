@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 interface {{classname}}Base extends ApiInterfaceCommonBase
 {    
-    {{#authMethods}}
+    {{#allAuthMethods}}
 
     {{#scopes}}
     /**
@@ -74,6 +74,6 @@ interface {{classname}}Base extends ApiInterfaceCommonBase
      */
     public function set{{name}}(?string $value, array $scopes, ?string &$redirectUrl, int& $responseCode ) : bool;
     
-    {{/authMethods}}
+    {{/allAuthMethods}}
 }
 {{/operations}}
