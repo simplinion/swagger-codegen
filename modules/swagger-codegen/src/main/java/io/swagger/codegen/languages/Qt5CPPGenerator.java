@@ -126,6 +126,7 @@ public class Qt5CPPGenerator extends AbstractCppCodegen implements CodegenConfig
         typeMapping.put("DateTime", "QDateTime");
         typeMapping.put("string", "QString");
         typeMapping.put("integer", "qint32");
+        typeMapping.put("number", "double");
         typeMapping.put("long", "qint64");
         typeMapping.put("boolean", "bool");
         typeMapping.put("array", "QList");
