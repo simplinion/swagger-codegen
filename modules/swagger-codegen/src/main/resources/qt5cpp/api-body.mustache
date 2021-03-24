@@ -27,7 +27,7 @@ namespace {{this}} {
 {{#operations}}
 {{#operation}}
 void
-{{classname}}::{{nickname}}({{#allParams}}{{{dataType}}}{{#isBodyParam}}&{{/isBodyParam}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}}) {
+{{classname}}::{{nickname}}({{#allParams}}{{{dataType}}}{{#isBodyParam}}&{{/isBodyParam}} {{paramName}},{{/allParams}} {{nickname}}Callback_t callback ) {
     QString fullPath;
     fullPath.append(this->host).append(this->basePath).append("{{{path}}}");
 
@@ -131,6 +131,14 @@ void
             &{{prefix}}HttpRequestWorker::on_execution_finished,
             this,
             &{{classname}}::{{nickname}}Callback);
+            
+    if ( callback )
+    {
+        connect(this, 
+            &{{classname}}::{{nickname}}Finished,
+            worker,
+            callback );
+    }
 
     worker->execute(&input);
 }
@@ -206,6 +214,7 @@ void
     {{/returnType}}
     worker->deleteLater();
 
+    emit {{nickname}}Finished({{#returnType}}output, {{/returnType}}error_type, error_str);
     if (worker->error_type == QNetworkReply::NoError) {
         emit {{nickname}}Signal({{#returnType}}output{{/returnType}});
     } else {
