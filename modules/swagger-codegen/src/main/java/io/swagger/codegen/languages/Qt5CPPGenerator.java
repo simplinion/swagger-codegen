@@ -1,6 +1,7 @@
 package io.swagger.codegen.languages;
 
 import io.swagger.codegen.*;
+import org.apache.commons.lang3.StringUtils;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.BooleanProperty;
 import io.swagger.models.properties.DateProperty;
@@ -282,6 +283,30 @@ public class Qt5CPPGenerator extends AbstractCppCodegen implements CodegenConfig
         return modelNamePrefix + initialCaps(name) + "Api";
     }
 
+    /**
+     * Update datatypeWithEnum for array container
+     * @param property Codegen property
+     */
+    @Override
+    protected void updateDataTypeWithEnumForArray(CodegenProperty property) {
+        CodegenProperty baseItem = property.items;
+        while (baseItem != null && (Boolean.TRUE.equals(baseItem.isMapContainer)
+                || Boolean.TRUE.equals(baseItem.isListContainer))) {
+            baseItem = baseItem.items;
+        }
+        if (baseItem != null) {
+            // set both datatype and datetypeWithEnum as only the inner type is enum
+            property.datatypeWithEnum = property.datatypeWithEnum.replace(baseItem.baseType, toEnumName(baseItem));
+
+            // naming the enum with respect to the language enum naming convention
+            // e.g. remove [], {} from array/map of enum
+            property.enumName = toEnumName(property);
+
+            updateCodegenPropertyEnum(property);
+        }
+    }
+
+    
     /**
      * Optional - type declaration.  This is a String which is used by the templates to instantiate your
      * types.  There is typically special handling for different property types
