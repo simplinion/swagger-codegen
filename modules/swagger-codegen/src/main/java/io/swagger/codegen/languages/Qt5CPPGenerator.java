@@ -146,7 +146,7 @@ public class Qt5CPPGenerator extends AbstractCppCodegen implements CodegenConfig
 
         importMapping = new HashMap<String, String>();
 
-        importMapping.put("SWGHttpRequestInputFileElement", "#include \"" + PREFIX + "HttpRequest.h\"");
+        importMapping.put( PREFIX + "HttpRequestInputFileElement", "#include \"" + PREFIX + "HttpRequest.h\"");
 
         namespaces = new HashMap<String, String>();
 
@@ -182,7 +182,7 @@ public class Qt5CPPGenerator extends AbstractCppCodegen implements CodegenConfig
 
             typeMapping.put("object", modelNamePrefix + "Object");
             typeMapping.put("file", modelNamePrefix + "HttpRequestInputFileElement");
-            importMapping.put("SWGHttpRequestInputFileElement", "#include \"" + modelNamePrefix + "HttpRequest.h\"");
+            importMapping.put( modelNamePrefix + "HttpRequestInputFileElement", "#include \"" + modelNamePrefix + "HttpRequest.h\"");
             additionalProperties().put("prefix", modelNamePrefix);
         }
 
