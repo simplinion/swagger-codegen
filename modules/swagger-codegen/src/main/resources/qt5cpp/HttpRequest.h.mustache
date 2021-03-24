@@ -14,8 +14,6 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 
-
-
 {{#cppNamespaceDeclarations}}
 namespace {{this}} {
 {{/cppNamespaceDeclarations}}
@@ -57,6 +55,7 @@ class {{prefix}}HttpRequestWorker : public QObject {
     Q_OBJECT
 
 public:
+
     QByteArray response;
     QNetworkReply::NetworkError error_type;
     QString error_str;
