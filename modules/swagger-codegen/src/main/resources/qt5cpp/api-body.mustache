@@ -17,9 +17,14 @@ namespace {{this}} {
     this->basePath = "";
 }
 
-{{classname}}::~{{classname}}() {}
+{{classname}}::~{{classname}}( LogCallback_t logCallback )
+   : mLogCallback( logCallback )
+{
+}
 
-{{classname}}::{{classname}}(QString host, QString basePath) {
+{{classname}}::{{classname}}(QString host, QString basePath, LogCallback_t logCallback ) 
+   : mLogCallback( logCallback )
+{
     this->host = host;
     this->basePath = basePath;
 }
@@ -140,6 +145,7 @@ void
             callback );
     }
 
+    log( QString("Sending request to %1").arg( fullPath ) );
     worker->execute(&input);
 }
 
@@ -155,7 +161,9 @@ void
     else {
         msg = "Error: " + worker->error_str;
     }
-
+    
+    log( QString("Request {{{path}}} has been finished with result: %1 (%2)").arg( error_type ).arg( error_str ) );
+    
     {{#returnType}}
     {{#isListContainer}}
     {{{returnType}}} output = {{{defaultResponse}}};
