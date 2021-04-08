@@ -20,10 +20,12 @@ class {{classname}}: public QObject {
 public:
     static const constexpr char* API_VERSION = "{{{version}}}";
 
-    {{classname}}();
-    {{classname}}(QString host, QString basePath);
+    using LogCallback_t = std::function<void(const QString& message )>;
+    
+    {{classname}}( LogCallback_t logCallback = nullptr );
+    {{classname}}(QString host, QString basePath, LogCallback_t logCallback = nullptr );
     ~{{classname}}();
-
+    
     QString host;
     QString basePath;
     QMap<QString, QString> defaultHeaders;
@@ -35,6 +37,16 @@ public:
 private:
     {{#operations}}{{#operation}}void {{nickname}}Callback ({{prefix}}HttpRequestWorker * worker);
     {{/operation}}{{/operations}}
+    
+    LogCallback_t mLogCallback;
+    
+    void log( const QString& message )
+    {
+       if ( mLogCallback )
+       {
+          mLogCallback( message );
+       }
+    }
 signals:
     {{#operations}}{{#operation}}void {{nickname}}Finished({{#returnType}}{{{returnType}}} summary, {{/returnType}}QNetworkReply::NetworkError error_type, QString& error_str);
     {{/operation}}{{/operations}}
