@@ -11,14 +11,14 @@
 namespace {{this}} {
 {{/cppNamespaceDeclarations}}
 
-{{classname}}::{{classname}}() 
+{{classname}}::{{classname}}( LogCallback_t logCallback ) 
+   : mLogCallback( logCallback )
 {
     this->host = "{{basePath}}";
     this->basePath = "";
 }
 
-{{classname}}::~{{classname}}( LogCallback_t logCallback )
-   : mLogCallback( logCallback )
+{{classname}}::~{{classname}}()
 {
 }
 
