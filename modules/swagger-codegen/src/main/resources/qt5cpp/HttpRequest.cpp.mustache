@@ -261,7 +261,7 @@ void {{prefix}}HttpRequestWorker::execute({{prefix}}HttpRequestInput *input) {
         request.setRawHeader(key.toStdString().c_str(), input->headers.value(key).toStdString().c_str());
     }
 
-    if (request_content.size() > 0 && !isFormData) {
+    if (request_content.size() > 0 && !isFormData && input->var_layout != {{prefix}}HttpRequestVarLayout::MULTIPART) {
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     }
     else if (input->var_layout == {{prefix}}HttpRequestVarLayout::URL_ENCODED) {
