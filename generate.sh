@@ -58,6 +58,10 @@ function prepareScript()
 #
 function generate()
 {
+    if [ ! "$MODULE" = "qt5cpp" ]
+    then 
+        TARGET_PATH=$TARGET_PATH/..
+    fi
     doCommandAsStep "Generation of the interface $YAML_PATH at the path $TARGET_PATH" java -jar $SWAGGER_JAR_FILE generate -i $YAML_PATH -l $MODULE -o $TARGET_PATH $SWAGGER_OPTS
 }
 

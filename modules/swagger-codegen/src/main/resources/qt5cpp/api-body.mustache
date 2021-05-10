@@ -145,7 +145,7 @@ void
             callback );
     }
 
-    log( QString("Sending request to %1").arg( fullPath ) );
+    log( QString("Sending %1 request to %2").arg("{{httpMethod}}").arg( fullPath ) );
     worker->execute(&input);
 }
 
@@ -162,7 +162,7 @@ void
         msg = "Error: " + worker->error_str;
     }
     
-    log( QString("Request {{{path}}} has been finished with result: %1 (%2)").arg( error_type ).arg( error_str ) );
+    log( QString("Request {{{path}}} has been finished with result: %1 (%2)").arg( error_type ).arg( msg ) );
     
     {{#returnType}}
     {{#isListContainer}}
