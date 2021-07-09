@@ -222,10 +222,10 @@ class {{controllerName}} extends Controller
             {{^authMethods}}
             $authenticated = true;
             {{/authMethods}}
-            {{#authMethods}}
+            {{#allAuthMethods}}
             // Set authentication method '{{name}}'
             $authenticated = $handler->set{{name}}($security{{name}}, [{{#scopes}}{{classname}}::{{classname}}_SCOPE_{{name}}_{{scope}}{{#hasMore}},{{/hasMore}}{{/scopes}}], $redirectUrl, $responseCode ) || $authenticated;
-            {{/authMethods}}
+            {{/allAuthMethods}}
             
             $responseHeaders = [];
             if ( $authenticated ) {
