@@ -80,7 +80,7 @@ class {{controllerName}} extends Controller
         $matches = [];
         $authenticationHeader = $request->headers->get('authorization');
 
-        {{#authMethods}}
+        {{#allAuthMethods}}
         // Authentication '{{name}}' required
         {{#isApiKey}}
         {{#isKeyInHeader}}
@@ -109,7 +109,7 @@ class {{controllerName}} extends Controller
         }
 
         {{/isOAuth}}
-        {{/authMethods}}
+        {{/allAuthMethods}}
 
         // Read out all input parameter values into variables
         {{#queryParams}}
