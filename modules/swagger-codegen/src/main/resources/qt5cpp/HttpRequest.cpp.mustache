@@ -272,7 +272,14 @@ void {{prefix}}HttpRequestWorker::execute({{prefix}}HttpRequestInput *input) {
     }
 
     if (input->http_method == "GET") {
-        manager->get(request);
+        if ( request_content.size() == 0 )
+        {
+            manager->get(request);
+        }
+        else
+        {
+            manager->sendCustomRequest(request, input->http_method.toLatin1(), request_content);
+        }
     }
     else if (input->http_method == "POST") {
         manager->post(request, request_content);
