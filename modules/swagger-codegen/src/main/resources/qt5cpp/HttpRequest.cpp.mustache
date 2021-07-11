@@ -278,7 +278,16 @@ void {{prefix}}HttpRequestWorker::execute({{prefix}}HttpRequestInput *input) {
         }
         else
         {
+#if (QT_VERSION >= 0x050800)
             manager->sendCustomRequest(request, input->http_method.toLatin1(), request_content);
+#else
+            QBuffer *buffer = new QBuffer;
+            buffer->setData(request_content);
+            buffer->open(QIODevice::ReadOnly);
+
+            QNetworkReply* reply = manager->sendCustomRequest(request, input->http_method.toLatin1(), buffer);
+            buffer->setParent(reply);
+#endif
         }
     }
     else if (input->http_method == "POST") {
