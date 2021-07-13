@@ -1697,6 +1697,7 @@ public class DefaultCodegen {
             StringProperty sp = (StringProperty) p;
             property.maxLength = sp.getMaxLength();
             property.minLength = sp.getMinLength();
+            property.originalPattern = sp.getPattern();
             property.pattern = toRegularExpression(sp.getPattern());
 
             // check if any validation rule defined
