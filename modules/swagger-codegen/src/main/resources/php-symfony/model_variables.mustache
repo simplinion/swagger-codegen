@@ -81,7 +81,7 @@
     {{/exclusiveMaximum}}
     {{/maximum}}
     {{#pattern}}
-     * @Assert\Regex("/{{pattern}}/")
+     * @Assert\Regex("/{{originalPattern}}/")
     {{/pattern}}
     {{#maxItems}}
      * @Assert\Count(
