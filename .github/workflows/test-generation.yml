@@ -1,0 +1,85 @@
+name: Test API Generation
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  test-generation:
+    name: Test code generation for custom languages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Copy custom modules to repository
+        run: cp -r ./modules ./repository/
+
+      - name: Build swagger-codegen
+        working-directory: ./repository
+        run: ./mvnw clean package -DskipTests
+
+      - name: Test generation for php-symfony
+        run: |
+          java -jar ./repository/modules/swagger-codegen-cli/target/swagger-codegen-cli.jar \
+            generate \
+            -i samples/petstore.yaml \
+            -l php-symfony \
+            -o /tmp/generated/php-symfony
+
+      - name: Verify php-symfony generation
+        run: |
+          if [ ! -d /tmp/generated/php-symfony ] || [ -z "$(ls -A /tmp/generated/php-symfony)" ]; then
+            echo "ERROR: php-symfony generation failed - output directory is empty or missing"
+            exit 1
+          fi
+          echo "php-symfony generation succeeded"
+          ls /tmp/generated/php-symfony
+
+      - name: Test generation for aspnetcore
+        run: |
+          java -jar ./repository/modules/swagger-codegen-cli/target/swagger-codegen-cli.jar \
+            generate \
+            -i samples/petstore.yaml \
+            -l aspnetcore \
+            -o /tmp/generated/aspnetcore
+
+      - name: Verify aspnetcore generation
+        run: |
+          if [ ! -d /tmp/generated/aspnetcore ] || [ -z "$(ls -A /tmp/generated/aspnetcore)" ]; then
+            echo "ERROR: aspnetcore generation failed - output directory is empty or missing"
+            exit 1
+          fi
+          echo "aspnetcore generation succeeded"
+          ls /tmp/generated/aspnetcore
+
+      - name: Test generation for qt5cpp
+        run: |
+          java -jar ./repository/modules/swagger-codegen-cli/target/swagger-codegen-cli.jar \
+            generate \
+            -i samples/petstore.yaml \
+            -l qt5cpp \
+            -o /tmp/generated/qt5cpp
+
+      - name: Verify qt5cpp generation
+        run: |
+          if [ ! -d /tmp/generated/qt5cpp ] || [ -z "$(ls -A /tmp/generated/qt5cpp)" ]; then
+            echo "ERROR: qt5cpp generation failed - output directory is empty or missing"
+            exit 1
+          fi
+          echo "qt5cpp generation succeeded"
+          ls /tmp/generated/qt5cpp
