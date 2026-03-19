@@ -1,0 +1,35 @@
+name: Build and publish Docker image
+
+on:
+  push:
+    tags:
+      - 'V.*'
+
+jobs:
+  build:
+    name: Building of docker image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Install choco-scripts
+        run: ./install-choco-scripts.sh
+
+      - name: Initialize repository
+        run: ./initialize.sh
+
+      - name: Build and push Docker image
+        shell: bash
+        run: ./build.sh --version="${GITHUB_REF_NAME#V.}"
