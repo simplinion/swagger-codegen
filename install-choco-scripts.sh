@@ -7,9 +7,10 @@
 #
 
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+GITHUB_REPO=https://github.com/JohnAmadis/choco-scripts
 VERSION=latest
 FILE_NAME=choco-scripts-$VERSION.tar.gz
-URL=http://release.choco-technologies.com/scripts/$FILE_NAME
+URL=$GITHUB_REPO/releases/latest/download/$FILE_NAME
 TARGET_PATH=~/.choco-scripts
 TEMPLATE_FILE_PATH=$TARGET_PATH/template.sh
 USER_CONFIG_PATH=~/.choco-scripts.cfg
@@ -33,6 +34,7 @@ else
     then
         VERSION=$2
         FILE_NAME=choco-scripts-$VERSION.tar.gz
+        URL=$GITHUB_REPO/releases/download/$VERSION/$FILE_NAME
     fi
 fi
 
