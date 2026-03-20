@@ -94,13 +94,15 @@ Use the `generate_docs.sh` script to generate only the API documentation (Markdo
 ./generate_docs.sh --module <module> --input <yaml-file> --target-path <output-dir>
 ```
 
+The generated documentation is placed in the `docs/` subdirectory of the specified `--target-path`.
+
 #### Arguments
 
 | Argument | Short | Required | Default | Description |
 |---|---|---|---|---|
 | `--module` | `-m` | No | `php-symfony` | Generator module to use (`php-symfony`, `php`) |
 | `--input` | `-i` | **Yes** | – | Path to the OpenAPI/Swagger YAML definition file |
-| `--target-path` | `-t` | **Yes** | – | Directory where the generated documentation will be placed |
+| `--target-path` | `-t` | **Yes** | – | Base directory; documentation will be placed in `<target-path>/docs/` |
 | `--jar` | | No | `repository/modules/swagger-codegen-cli/target/swagger-codegen-cli.jar` | Path to a pre-compiled swagger-codegen JAR |
 | `--options` | `-o` | No | *(empty)* | Additional parameters passed directly to the swagger-codegen command |
 
@@ -109,8 +111,10 @@ Use the `generate_docs.sh` script to generate only the API documentation (Markdo
 Generate API documentation for a PHP Symfony project:
 
 ```bash
-./generate_docs.sh --module php-symfony --input api/openapi.yaml --target-path output/docs
+./generate_docs.sh --module php-symfony --input api/openapi.yaml --target-path output
 ```
+
+The documentation will be available at `output/docs/`.
 
 ## Docker
 

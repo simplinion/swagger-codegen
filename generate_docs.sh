@@ -58,7 +58,7 @@ function prepareScript()
 #
 function generate()
 {
-    doCommandAsStep "Generation of the documentation for $YAML_PATH at the path $TARGET_PATH" java -DapiDocs -DmodelDocs -jar "$SWAGGER_JAR_FILE" generate -i "$YAML_PATH" -l "$MODULE" -o "$TARGET_PATH" $SWAGGER_OPTS
+    doCommandAsStep "Generation of the documentation for $YAML_PATH at the path $TARGET_PATH/docs" java -DapiDocs -DmodelDocs -jar "$SWAGGER_JAR_FILE" generate -i "$YAML_PATH" -l "$MODULE" -o "$TARGET_PATH/docs" $SWAGGER_OPTS
 }
 
 #######################################################################################
