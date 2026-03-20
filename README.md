@@ -86,6 +86,32 @@ Generate a Qt5 C++ client:
 ./generate.sh --module qt5cpp --input api/openapi.yaml --target-path output/client
 ```
 
+### Generating API documentation only
+
+Use the `generate_docs.sh` script to generate only the API documentation (Markdown files) from an OpenAPI/Swagger YAML file, without generating any server or client code:
+
+```bash
+./generate_docs.sh --module <module> --input <yaml-file> --target-path <output-dir>
+```
+
+#### Arguments
+
+| Argument | Short | Required | Default | Description |
+|---|---|---|---|---|
+| `--module` | `-m` | No | `php-symfony` | Generator module to use (`php-symfony`, `php`) |
+| `--input` | `-i` | **Yes** | – | Path to the OpenAPI/Swagger YAML definition file |
+| `--target-path` | `-t` | **Yes** | – | Directory where the generated documentation will be placed |
+| `--jar` | | No | `repository/modules/swagger-codegen-cli/target/swagger-codegen-cli.jar` | Path to a pre-compiled swagger-codegen JAR |
+| `--options` | `-o` | No | *(empty)* | Additional parameters passed directly to the swagger-codegen command |
+
+#### Example
+
+Generate API documentation for a PHP Symfony project:
+
+```bash
+./generate_docs.sh --module php-symfony --input api/openapi.yaml --target-path output/docs
+```
+
 ## Docker
 
 ### Building the Docker image
@@ -146,6 +172,7 @@ The repository includes a `bitbucket-pipelines.yml` configuration. Pushing a tag
 ├── Dockerfile                # Docker image definition
 ├── build.sh                  # Builds and publishes the Docker image
 ├── generate.sh               # Generates code from an OpenAPI YAML file
+├── generate_docs.sh          # Generates only API documentation from an OpenAPI YAML file
 ├── initialize.sh             # Initializes the repo and builds the JAR
 ├── install-choco-scripts.sh  # Installs the choco-scripts framework
 ├── task-configuration.sh     # Project-level configuration variables
