@@ -35,6 +35,29 @@ echo "Using choco-scripts from path $CHOCO_SCRIPTS_PATH in version $CHOCO_SCRIPT
 #
 source $(getChocoScriptsPath)
 
+function getJavaMajorVersion()
+{
+    local javaVersionLine
+    javaVersionLine=$(java -version 2>&1 | head -n 1)
+
+    if [[ "$javaVersionLine" =~ \"1\.([0-9]+)\. ]]; then
+        echo "${BASH_REMATCH[1]}"
+        return
+    fi
+
+    if [[ "$javaVersionLine" =~ \"([0-9]+)\. ]]; then
+        echo "${BASH_REMATCH[1]}"
+        return
+    fi
+
+    if [[ "$javaVersionLine" =~ \"([0-9]+)\" ]]; then
+        echo "${BASH_REMATCH[1]}"
+        return
+    fi
+
+    echo ""
+}
+
 #
 #   The function prepares a framework script to work
 #
@@ -61,6 +84,13 @@ if [ "$USE_DOCKER" == "TRUE" ]
 then 
     doCommandAsStep "Building swagger-codegen" ./run-in-docker.sh mvn clean package
 else 
-    doCommandAsStep "Building swagger-codegen" ./mvnw clean package
+    JAVA_MAJOR_VERSION=$(getJavaMajorVersion)
+    if [ -n "$JAVA_MAJOR_VERSION" ] && [ "$JAVA_MAJOR_VERSION" -ge 9 ]
+    then
+        echo "Detected Java $JAVA_MAJOR_VERSION. Running Maven with -DskipTests for compatibility with legacy swagger-codegen test suite."
+        doCommandAsStep "Building swagger-codegen" ./mvnw clean package -DskipTests
+    else
+        doCommandAsStep "Building swagger-codegen" ./mvnw clean package
+    fi
 fi
 cd $THIS_DIR
