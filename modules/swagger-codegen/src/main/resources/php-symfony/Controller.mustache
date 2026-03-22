@@ -2,7 +2,7 @@
 /**
  * Controller
  *
- * PHP version 5
+ * PHP version 8.1
  *
  * @category Class
  * @package  {{controllerPackage}}
@@ -37,6 +37,7 @@ class Controller
     protected $validator;
     protected $serializer;
     protected $apiServer;
+    protected bool $debug = false;
 
     public function setValidator(ValidatorInterface $validator)
     {
@@ -51,6 +52,11 @@ class Controller
     public function setApiServer($server)
     {
         $this->apiServer = $server;
+    }
+
+    public function setDebug(bool $debug): void
+    {
+        $this->debug = $debug;
     }
 
     /**
@@ -128,15 +134,15 @@ class Controller
      *
      * @param \Exception|null $exception
      *
-     * @return array
+     * @return array|null
      */
-    private function exceptionToArray(\Exception $exception = null)
+    private function exceptionToArray(?\Exception $exception = null)
     {
         if (null === $exception) {
             return null;
         }
 
-        if (!$this->container->get('kernel')->isDebug()) {
+        if (!$this->debug) {
             return [
                 'message'  => $exception->getMessage(),
             ];
