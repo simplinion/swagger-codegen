@@ -3,7 +3,7 @@ name: Build and publish Docker image
 on:
   push:
     tags:
-      - 'V.*'
+      - 'v*'
 
 jobs:
   build:
@@ -32,4 +32,4 @@ jobs:
 
       - name: Build and push Docker image
         shell: bash
-        run: ./build.sh --version="${GITHUB_REF_NAME#V.}"
+        run: ./build.sh --version="${GITHUB_REF_NAME#v}"
