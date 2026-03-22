@@ -28,6 +28,7 @@ RUN ln -fs /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
 RUN apt-get install -y tzdata
 RUN dpkg-reconfigure --frontend noninteractive tzdata
 RUN apt-get install -y sudo
+RUN apt-get install -y zip
 
 #
 #   Configuration of paths in the image
